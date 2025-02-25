@@ -9,4 +9,4 @@ st.write(f"Você escolheu: {numero}")
 
 # Botão
 if st.button("Clique aqui"):
-    st.write("Você clicou no botão!")
+st.write("Você clicou no botão!")
