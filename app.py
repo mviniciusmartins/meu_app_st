@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
 
 # Configuração inicial da página
 st.set_page_config(page_title="Análise de Dados Agrícolas", layout="wide")
@@ -57,34 +58,25 @@ if uploaded_file is not None:
 
         # Gráfico 1: Distribuição de Temperatura e Umidade
         st.write("### Distribuição de Temperatura e Umidade")
-        fig, ax = plt.subplots(figsize=(10, 6))
-        sns.scatterplot(data=filtered_df, x="Temperature", y="Humidity", hue="Soil Type", palette="Set2", ax=ax)
-        ax.set_title("Relação entre Temperatura e Umidade por Tipo de Solo")
-        ax.set_xlabel("Temperatura (°C)")
-        ax.set_ylabel("Umidade (%)")
-        st.pyplot(fig)
+        fig = px.scatter(filtered_df, x="Temperature", y="Humidity", color="Soil Type", title="Relação entre Temperatura e Umidade por Tipo de Solo")
+        st.plotly_chart(fig)
 
         # Gráfico 2: Distribuição de Nitrogênio, Potássio e Fósforo
         st.write("### Distribuição de Nutrientes no Solo")
         nutrients = filtered_df[["Nitrogen", "Potassium", "Phosphorous"]]
-        st.bar_chart(nutrients)
+        fig = px.bar(nutrients, title="Distribuição de Nitrogênio, Potássio e Fósforo")
+        st.plotly_chart(fig)
 
         # Gráfico 3: Contagem de Tipos de Cultura
         st.write("### Contagem de Tipos de Cultura")
         crop_counts = filtered_df["Crop Type"].value_counts()
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.pie(crop_counts, labels=crop_counts.index, autopct="%1.1f%%", startangle=90)
-        ax.set_title("Distribuição de Tipos de Cultura")
-        st.pyplot(fig)
+        fig = px.pie(values=crop_counts, names=crop_counts.index, title="Distribuição de Tipos de Cultura")
+        st.plotly_chart(fig)
 
         # Gráfico 4: Relação entre Umidade e Teor de Nitrogênio
         st.write("### Relação entre Umidade e Teor de Nitrogênio")
-        fig, ax = plt.subplots(figsize=(10, 6))
-        sns.regplot(data=filtered_df, x="Humidity", y="Nitrogen", scatter_kws={"alpha": 0.5}, ax=ax)
-        ax.set_title("Relação entre Umidade e Nitrogênio")
-        ax.set_xlabel("Umidade (%)")
-        ax.set_ylabel("Teor de Nitrogênio")
-        st.pyplot(fig)
+        fig = px.scatter(filtered_df, x="Humidity", y="Nitrogen", trendline="ols", title="Relação entre Umidade e Nitrogênio")
+        st.plotly_chart(fig)
 
 else:
     st.info("Por favor, faça upload de um arquivo CSV para começar a análise.")
